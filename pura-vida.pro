@@ -1,6 +1,6 @@
 TEMPLATE = app
-TARGET = novacoin-qt
-VERSION = 0.7.5
+TARGET = PuraVidaCoin-qt
+VERSION = 1.0.0
 INCLUDEPATH += src src/json src/qt
 QT += core gui network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -25,15 +25,22 @@ win32-g++-cross: QMAKE_TARGET.arch = $$TARGET_PLATFORM
 #    BOOST_INCLUDE_PATH, BOOST_LIB_PATH, BDB_INCLUDE_PATH,
 #    BDB_LIB_PATH, OPENSSL_INCLUDE_PATH and OPENSSL_LIB_PATH respectively
 
-#BOOST_LIB_SUFFIX=-mgw49-mt-s-1_55
-#BOOST_INCLUDE_PATH=C:/deps/boost_1_55_0
-#BOOST_LIB_PATH=C:/deps/boost_1_55_0/stage/lib
-#BDB_INCLUDE_PATH=C:/deps/db-6.0.20/build_unix
-#BDB_LIB_PATH=C:/deps/db-6.0.20/build_unix
-#OPENSSL_INCLUDE_PATH=C:/deps/openssl-1.0.1j/include
-#OPENSSL_LIB_PATH=C:/deps/openssl-1.0.1j
-#QRENCODE_INCLUDE_PATH=C:/deps/qrencode-3.4.4
-#QRENCODE_LIB_PATH=C:/deps/qrencode-3.4.4/.libs
+windows:LIBS += -lshlwapi
+LIBS += $$join(BOOST_LIB_PATH,,-L,) $$join(BDB_LIB_PATH,,-L,) $$join(OPENSSL_LIB_PATH,,-L,) $$join(QRENCODE_LIB_PATH,,-L,)
+LIBS += -lssl -lcrypto -ldb_cxx$$BDB_LIB_SUFFIX
+windows:LIBS += -lws2_32 -lole32 -loleaut32 -luuid -lgdi32
+LIBS += -lboost_system-mgw46-mt-sd-1_53 -lboost_filesystem-mgw46-mt-sd-1_53 -lboost_program_options-mgw46-mt-sd-1_53 -lboost_thread-mgw46-mt-sd-1_53
+BOOST_LIB_SUFFIX=-mgw46-mt-sd-1_53
+BOOST_INCLUDE_PATH=C:/deps/boost_1_53_0
+BOOST_LIB_PATH=C:/deps/boost_1_53_0/stage/lib
+BDB_INCLUDE_PATH=c:/deps/db-4.8.30.NC/build_unix
+BDB_LIB_PATH=c:/deps/db-4.8.30.NC/build_unix
+OPENSSL_INCLUDE_PATH=c:/deps/openssl-1.0.2d/include
+OPENSSL_LIB_PATH=c:/deps/openssl-1.0.2d
+MINIUPNPC_INCLUDE_PATH=C:/deps/
+MINIUPNPC_LIB_PATH=C:/deps/miniupnpc
+QRENCODE_INCLUDE_PATH=C:/deps/qrencode-3.4.4
+QRENCODE_LIB_PATH=C:/deps/qrencode-3.4.4/.libs
 
 OBJECTS_DIR = build
 MOC_DIR = build
@@ -103,7 +110,7 @@ contains(USE_LEVELDB, 1) {
             QMAKE_RANLIB = $$replace(QMAKE_STRIP, strip, ranlib)
         }
         LIBS += -lshlwapi
-        genleveldb.commands = cd $$PWD/src/leveldb && CC=$$QMAKE_CC CXX=$$QMAKE_CXX TARGET_OS=OS_WINDOWS_CROSSCOMPILE $(MAKE) OPT=\"$$QMAKE_CXXFLAGS $$QMAKE_CXXFLAGS_RELEASE\" libleveldb.a libmemenv.a && $$QMAKE_RANLIB $$PWD/src/leveldb/libleveldb.a && $$QMAKE_RANLIB $$PWD/src/leveldb/libmemenv.a
+        #genleveldb.commands = cd $$PWD/src/leveldb && CC=$$QMAKE_CC CXX=$$QMAKE_CXX TARGET_OS=OS_WINDOWS_CROSSCOMPILE $(MAKE) OPT=\"$$QMAKE_CXXFLAGS $$QMAKE_CXXFLAGS_RELEASE\" libleveldb.a libmemenv.a && $$QMAKE_RANLIB $$PWD/src/leveldb/libleveldb.a && $$QMAKE_RANLIB $$PWD/src/leveldb/libmemenv.a
     }
     genleveldb.target = $$PWD/src/leveldb/libleveldb.a
     genleveldb.depends = FORCE
@@ -119,7 +126,7 @@ contains(USE_LEVELDB, 1) {
 
 # use: qmake "USE_ASM=1"
 contains(USE_ASM, 1) {
-    message(Using assembler scrypt & sha256 implementations)
+    message(Using assembler x11 & sha256 implementations)
     DEFINES += USE_ASM
 
      contains(QMAKE_TARGET.arch, i386) | contains(QMAKE_TARGET.arch, i586) | contains(QMAKE_TARGET.arch, i686) {
@@ -142,13 +149,13 @@ contains(USE_ASM, 1) {
 } else {
     # use: qmake "USE_SSE2=1"
     contains(USE_SSE2, 1) {
-        message(Using SSE2 intrinsic scrypt implementation & generic sha256 implementation)
+        message(Using x11 implementation & generic sha256 implementation)
         SOURCES += src/crypto/scrypt/intrin/scrypt-sse2.cpp
         DEFINES += USE_SSE2
         QMAKE_CXXFLAGS += -msse2 
         QMAKE_CFLAGS += -msse2
     } else {
-        message(Using generic scrypt & sha256 implementations)
+        message(Using generic x11 & sha256 implementations)
         SOURCES += src/crypto/scrypt/generic/scrypt-generic.cpp
     }
 }
@@ -268,7 +275,21 @@ HEADERS += src/qt/bitcoingui.h \
     src/qt/multisiginputentry.h \
     src/qt/multisigdialog.h \
     src/qt/secondauthdialog.h \
-    src/qt/qrcodedialog.h
+    src/qt/qrcodedialog.h \
+    src/hashblock.h \
+    src/sph_blake.h \
+    src/sph_skein.h \
+    src/sph_keccak.h \
+    src/sph_jh.h \
+    src/sph_groestl.h \
+    src/sph_bmw.h \
+    src/sph_types.h \
+    src/sph_luffa.h \
+    src/sph_cubehash.h \
+    src/sph_echo.h \
+    src/sph_shavite.h \
+    src/sph_simd.h \
+    src/sph_types.h 
 
 SOURCES += src/qt/bitcoin.cpp src/qt/bitcoingui.cpp \
     src/qt/intro.cpp \
@@ -347,7 +368,18 @@ SOURCES += src/qt/bitcoin.cpp src/qt/bitcoingui.cpp \
     src/qt/multisigdialog.cpp \
     src/qt/secondauthdialog.cpp \
     src/qt/qrcodedialog.cpp \
-    src/base58.cpp
+    src/base58.cpp \
+	src/blake.c \
+    src/bmw.c \
+    src/groestl.c \
+    src/jh.c \
+    src/keccak.c \
+    src/skein.c \
+    src/luffa.c \
+    src/cubehash.c \
+    src/shavite.c \
+    src/echo.c \
+    src/simd.c 
 
 RESOURCES += \
     src/qt/bitcoin.qrc
@@ -458,7 +490,7 @@ macx:OBJECTIVE_SOURCES += src/qt/macdockiconhandler.mm \
 macx:LIBS += -framework Foundation -framework ApplicationServices -framework AppKit
 macx:DEFINES += MAC_OSX MSG_NOSIGNAL=0
 macx:ICON = src/qt/res/icons/bitcoin.icns
-macx:TARGET = "NovaCoin-Qt"
+macx:TARGET = "PuraVidaCoin-Qt"
 macx:QMAKE_CFLAGS_THREAD += -pthread
 macx:QMAKE_LFLAGS_THREAD += -pthread
 macx:QMAKE_CXXFLAGS_THREAD += -pthread

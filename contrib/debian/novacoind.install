@@ -1,2 +1,2 @@
-debian/bin/novacoind usr/bin
-src/novacoind usr/lib/novacoin
+debian/bin/PuraVidaCoind usr/bin
+src/PuraVidaCoind usr/lib/PuraVidaCoin

@@ -56,6 +56,17 @@ LIBS += -l kernel32 -l user32 -l gdi32 -l comdlg32 -l winspool -l winmm -l shell
 HEADERS = $(wildcard *.h)
 
 OBJS= \
+    obj/groestl.o \
+    obj/blake.o \
+    obj/bmw.o \
+    obj/skein.o \
+    obj/keccak.o \
+    obj/shavite.o \
+    obj/jh.o \
+    obj/luffa.o \
+    obj/cubehash.o \
+    obj/echo.o \
+    obj/simd.o \
     obj/alert.o \
     obj/version.o \
     obj/checkpoints.o \
@@ -90,7 +101,7 @@ OBJS= \
     obj/kernel.o \
     obj/kernel_worker.o
 
-all: novacoind.exe
+all: PuraVidaCoind.exe
 
 #
 # LevelDB support
@@ -156,11 +167,11 @@ endif
 obj/%.o: %.cpp $(HEADERS)
 	g++ -c $(CFLAGS) -o $@ $<
 
-novacoind.exe: $(OBJS:obj/%=obj/%)
+PuraVidaCoind.exe: $(OBJS:obj/%=obj/%)
 	g++ $(CFLAGS) $(LDFLAGS) -o $@ $(LIBPATHS) $^ $(LIBS)
 
 clean:
-	-del /Q novacoind
+	-del /Q PuraVidaCoind
 	-del /Q obj\*
 	-del /Q crypto\scrypt\asm\obj\*
 	-del /Q crypto\sha2\asm\obj\*

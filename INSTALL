@@ -1,9 +1,9 @@
-Building NovaCoin
+Building PuraVidaCoin
 
-See doc/readme-qt.rst for instructions on building NovaCoin Qt,
+See doc/readme-qt.rst for instructions on building PuraVidaCoin Qt,
 the intended-for-end-users, nice-graphical-interface, reference
-implementation of NovaCoin.
+implementation of PuraVidaCoin.
 
-See doc/build-*.txt for instructions on building novacoind,
+See doc/build-*.txt for instructions on building PuraVidaCoind,
 the intended-for-services, no-graphical-interface, reference
-implementation of NovaCoin.
+implementation of PuraVidaCoin.

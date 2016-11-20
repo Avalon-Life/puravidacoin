@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# PROVIDE: novacoin
+# PROVIDE: PuraVidaCoin
 # REQUIRE: LOGIN
 # KEYWORD: shutdown
 
@@ -8,46 +8,46 @@
 # Add the following lines to /etc/rc.conf.local or /etc/rc.conf
 # to enable this service:
 #
-# novacoin_enable (bool): Set to NO by default. Set this variable to YES if you want to enable novacoin service.
-# novacoin_config (path): Set to /usr/local/etc/novacoin.conf by default.
-# novacoin_user:  The user account novacoin daemon runs as. It uses 'root' user by default.
-# novacoin_group: The group account novacoin daemon runs as. It uses 'wheel' group by default.
-# novacoin_datadir (str): Default to "/var/db/novacoin". Base data directory.
+# PuraVidaCoin_enable (bool): Set to NO by default. Set this variable to YES if you want to enable PuraVidaCoin service.
+# PuraVidaCoin_config (path): Set to /usr/local/etc/PuraVidaCoin.conf by default.
+# PuraVidaCoin_user:  The user account PuraVidaCoin daemon runs as. It uses 'root' user by default.
+# PuraVidaCoin_group: The group account PuraVidaCoin daemon runs as. It uses 'wheel' group by default.
+# PuraVidaCoin_datadir (str): Default to "/var/db/PuraVidaCoin". Base data directory.
 
 . /etc/rc.subr
 
-name=novacoin
-rcvar=novacoin_enable
+name=PuraVidaCoin
+rcvar=PuraVidaCoin_enable
 
-: ${novacoin_enable:=NO}
-: ${novacoin_config=/usr/local/etc/novacoin.conf}
-: ${novacoin_datadir=/var/db/novacoin}
-: ${novacoin_user="root"}
-: ${novacoin_group="wheel"}
+: ${PuraVidaCoin_enable:=NO}
+: ${PuraVidaCoin_config=/usr/local/etc/PuraVidaCoin.conf}
+: ${PuraVidaCoin_datadir=/var/db/PuraVidaCoin}
+: ${PuraVidaCoin_user="root"}
+: ${PuraVidaCoin_group="wheel"}
 
-required_files=${novacoin_config}
-command=/usr/local/bin/novacoind
-novacoin_chdir=${novacoin_datadir}
-pidfile="${novacoin_datadir}/novacoind.pid"
-stop_cmd=novacoin_stop
-command_args="-conf=${novacoin_config} -datadir=${novacoin_datadir} -daemon -pid=${pidfile}"
+required_files=${PuraVidaCoin_config}
+command=/usr/local/bin/PuraVidaCoind
+PuraVidaCoin_chdir=${PuraVidaCoin_datadir}
+pidfile="${PuraVidaCoin_datadir}/PuraVidaCoind.pid"
+stop_cmd=PuraVidaCoin_stop
+command_args="-conf=${PuraVidaCoin_config} -datadir=${PuraVidaCoin_datadir} -daemon -pid=${pidfile}"
 start_precmd="${name}_prestart"
 
-novacoin_create_datadir()
+PuraVidaCoin_create_datadir()
 {
 	echo "Creating data directory"
-	eval mkdir -p ${novacoin_datadir}
-	[ $? -eq 0 ] && chown -R ${novacoin_user}:${novacoin_group} ${novacoin_datadir}
+	eval mkdir -p ${PuraVidaCoin_datadir}
+	[ $? -eq 0 ] && chown -R ${PuraVidaCoin_user}:${PuraVidaCoin_group} ${PuraVidaCoin_datadir}
 }
 
-novacoin_prestart()
+PuraVidaCoin_prestart()
 {
-	if [ ! -d "${novacoin_datadir}/." ]; then
-		novacoin_create_datadir || return 1
+	if [ ! -d "${PuraVidaCoin_datadir}/." ]; then
+		PuraVidaCoin_create_datadir || return 1
 	fi
 }
 
-novacoin_requirepidfile()
+PuraVidaCoin_requirepidfile()
 {
 	if [ ! "0`check_pidfile ${pidfile} ${command}`" -gt 1 ]; then
 		echo "${name} not running? (check $pidfile)."
@@ -55,12 +55,12 @@ novacoin_requirepidfile()
 	fi
 }
 
-novacoin_stop()
+PuraVidaCoin_stop()
 {
-    novacoin_requirepidfile
+    PuraVidaCoin_requirepidfile
 
 	echo "Stopping ${name}."
-	eval ${command} -conf=${novacoin_config} -datadir=${novacoin_datadir} stop
+	eval ${command} -conf=${PuraVidaCoin_config} -datadir=${PuraVidaCoin_datadir} stop
 	wait_for_pids ${rc_pid}
 }
 

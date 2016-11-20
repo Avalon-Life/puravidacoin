@@ -4,13 +4,13 @@ set -e
 
 umask 077
 
-basedir=~/.novacoin
+basedir=~/.PuraVidaCoin
 dbfile="$basedir/DB_CONFIG"
-cfgfile="$basedir/novacoin.conf"
+cfgfile="$basedir/PuraVidaCoin.conf"
 
 [ -e "$basedir" ] || mkdir "$basedir"
 
-# Novacoin does not clean up DB log files by default
+# PuraVidaCoin does not clean up DB log files by default
 [ -e "$dbfile" ] || echo 'set_flags DB_LOG_AUTOREMOVE' > "$dbfile"
 
-exec /usr/lib/novacoin/novacoin-qt "$@"
+exec /usr/lib/PuraVidaCoin/PuraVidaCoin-qt "$@"

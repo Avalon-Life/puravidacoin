@@ -95,7 +95,7 @@ int64_t KernelRecord::getPoSReward(int nBits, int minutes)
     if( nWeight <  nStakeMinAge)
         return 0;
     uint64_t coinAge = (nValue * nWeight ) / (COIN * 86400);
-    PoSReward = GetProofOfStakeReward(coinAge, nBits, GetAdjustedTime() + minutes * 60);
+    PoSReward = GetProofOfStakeReward(coinAge, nBits, GetAdjustedTime() + minutes * 60, false, 9999999);
     return PoSReward;
 }
 

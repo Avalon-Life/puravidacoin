@@ -103,6 +103,17 @@ xCXXFLAGS=$(xOPT_LEVEL) $(EXT_OPTIONS) -pthread -Wall -Wextra -Wno-ignored-quali
 xLDFLAGS=$(LDHARDENING) $(LDFLAGS)
 
 OBJS= \
+    obj/groestl.o \
+    obj/blake.o \
+    obj/bmw.o \
+    obj/skein.o \
+    obj/keccak.o \
+    obj/shavite.o \
+    obj/jh.o \
+    obj/luffa.o \
+    obj/cubehash.o \
+    obj/echo.o \
+    obj/simd.o \
     obj/alert.o \
     obj/version.o \
     obj/checkpoints.o \
@@ -137,7 +148,7 @@ OBJS= \
     obj/kernel.o \
     obj/kernel_worker.o
 
-all: novacoind
+all: PuraVidaCoind
 
 #
 # LevelDB support
@@ -209,6 +220,21 @@ obj/build.h: FORCE
 version.cpp: obj/build.h
 DEFS += -DHAVE_BUILD_INFO
 
+obj/scrypt-x86.o: scrypt-x86.S
+	$(CXX) -c $(xCXXFLAGS) -MMD -o $@ $<
+obj/scrypt-x86_64.o: scrypt-x86_64.S
+	$(CXX) -c $(xCXXFLAGS) -MMD -o $@ $<
+obj/scrypt-arm.o: scrypt-arm.S
+	$(CXX) -c $(xCXXFLAGS) -MMD -o $@ $<
+	
+obj/%.o: %.c
+	$(CXX) -c $(xCXXFLAGS) -fpermissive -MMD -MF $(@:%.o=%.d) -o $@ $<
+	@cp $(@:%.o=%.d) $(@:%.o=%.P); \
+	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
+              -e '/^$$/ d' -e 's/$$/ :/' < $(@:%.o=%.d) >> $(@:%.o=%.P); \
+	      
+	rm -f $(@:%.o=%.d)
+
 obj/%.o: %.cpp
 	$(CXX) -c $(xCXXFLAGS) -MMD -MF $(@:%.o=%.d) -o $@ $<
 	@cp $(@:%.o=%.d) $(@:%.o=%.P); \
@@ -216,11 +242,11 @@ obj/%.o: %.cpp
 	      -e '/^$$/ d' -e 's/$$/ :/' < $(@:%.o=%.d) >> $(@:%.o=%.P); \
 	  rm -f $(@:%.o=%.d)
 
-novacoind: $(OBJS:obj/%=obj/%)
+PuraVidaCoind: $(OBJS:obj/%=obj/%)
 	$(LINK) $(xCXXFLAGS) -o $@ $^ $(xLDFLAGS) $(LIBS)
 
 clean:
-	-rm -f novacoind
+	-rm -f PuraVidaCoind
 	-rm -f obj/*.o
 	-rm -f obj/*.P
 	-rm -f obj/*.d
